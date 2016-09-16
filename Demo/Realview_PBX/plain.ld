@@ -2,8 +2,10 @@ ENTRY(Vector_Init);
 
 MEMORY
 {
-	ram (rwx) : ORIGIN = 0x0, LENGTH = 64k
+	ram (rwx) : ORIGIN = 0x10000, LENGTH = ( 64M - 0x10000 )
 }
+
+PROVIDE(__stack = 0x10000);
 
 SECTIONS
 {
@@ -17,12 +19,11 @@ SECTIONS
         *(.rodata*)
         _etext = .;
     } > ram
-    .data :
+    .data : /*AT(ADDR(.text) + SIZEOF(.text))*/
     {
         _data = .;
         *(vtable)
         *(.data*)
-        *(.got*)
         _edata = .;
     } > ram
     .bss :
